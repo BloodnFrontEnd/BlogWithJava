@@ -1,6 +1,6 @@
 import {Component, input} from '@angular/core';
-import {IPostSummery} from '../../../pages/home/home';
 import {NgClass} from '@angular/common';
+import {IPostSumDTO} from '../../../services/posts-service';
 
 @Component({
   selector: 'app-post',
@@ -11,5 +11,5 @@ import {NgClass} from '@angular/common';
   styleUrl: './post.css',
 })
 export class Post {
-  public readonly post = input.required<IPostSummery>();
+  public readonly post = input.required<IPostSumDTO>();
 }

@@ -4,7 +4,7 @@ import {CustomInput} from '../custom-input/custom-input';
 import {email, form, minLength, required, validate} from '@angular/forms/signals';
 import {ICreateUser} from '../../features/auth/registration/registration';
 import {Validators} from '@angular/forms';
-import {AuthService} from '../../features/auth/auth-service';
+import {AuthService, ILogin} from '../../features/auth/auth-service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {setToken} from '../../core/token-object/token-object';
 import {GrowlService} from '../../core/growl/growl-service';
@@ -27,7 +27,7 @@ export class AuthPopup {
   protected type = signal<'sign in' | 'sign up'>('sign in');
   public close = output();
 
-  protected loginModel = signal<signIn>(
+  protected loginModel = signal<ILogin>(
     {
       email: '',
       password: ''
@@ -138,12 +138,8 @@ export class AuthPopup {
   }
 }
 
-export interface signIn {
-  email: string;
-  password: string;
-}
 
-export interface ICreateUserModel{
+export interface ICreateUserModel {
   username: string,
   email: string,
   displayName: string,

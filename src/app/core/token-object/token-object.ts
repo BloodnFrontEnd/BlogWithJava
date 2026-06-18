@@ -1,4 +1,6 @@
-export function setToken(obj: any): void{
+import {ITokenDTO} from '../../features/auth/auth-service';
+
+export function setToken(obj: ITokenDTO): void{
   sessionStorage.setItem('accessToken', obj.accessToken);
   sessionStorage.setItem('refreshToken', obj.refreshToken);
   sessionStorage.setItem('username', obj.username);

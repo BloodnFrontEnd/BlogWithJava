@@ -9,6 +9,8 @@ import {CustomDropdown, DropdownData} from '../../../../shared/custom-dropdown/c
 import {form, minLength, required} from '@angular/forms/signals';
 import {CommonModule} from '@angular/common';
 import {AuthPopup} from '../../../../shared/auth-popup/auth-popup';
+import {ICreatePost, IPostDTO, PostsService, StatusType} from '../../services/posts-service';
+import {CategoryService, ICategory} from '../../services/category-service';
 
 @Component({
   selector: 'app-home',
@@ -25,7 +27,9 @@ import {AuthPopup} from '../../../../shared/auth-popup/auth-popup';
   styleUrl: './home.css',
 })
 export class Home implements OnInit {
-  private readonly homeService = inject(HomeService);
+  private readonly postsService = inject(PostsService);
+  private readonly categoryService = inject(CategoryService);
+
   protected readonly posts = signal<any>([]);
 
   // POPUPS
@@ -38,16 +42,17 @@ export class Home implements OnInit {
   public readonly selectedCategory = signal<DropdownData | null>(null);
 
   protected isFeatured = signal<boolean>(false);
-  protected selectedStatus = signal<Status>('PRIVATE');
+  protected selectedStatus = signal<StatusType>('PRIVATE');
 
-  addPostModel = signal(<ICreatePost>{
+  addPostModel = signal(<PostModel>{
     title: '',
     caption: '',
+    description: '',
     categoryId: null,
     content: '',
+    coverImgUrl: '',
+    featured: null,
     status: null,
-    featured: false,
-    coverImageurl: ''
   })
 
   addPostForm = form(this.addPostModel, (schemaPath) => {
@@ -67,14 +72,16 @@ export class Home implements OnInit {
     this.getPosts();
   }
 
+  // DONE
   private getPosts(): void {
-    this.homeService.getPosts().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((posts: IPostContent) => {
+    this.postsService.getPosts({page: 0, size: 10}).pipe(takeUntilDestroyed(this.destroyRef)).subscribe((posts: IPostDTO) => {
       this.posts.set(posts.content);
     })
   }
 
+  // DONE
   private getCategories(): void {
-    this.homeService.getCategories().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((categories: ICategory[]) => {
+    this.categoryService.getCategories().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((categories: ICategory[]) => {
       this.categoryDropdownData.set(categories.map((category: ICategory) => ({
         id: category.id,
         value: category.name
@@ -93,7 +100,7 @@ export class Home implements OnInit {
 
   protected showStatusPopup(): void {
     event?.preventDefault();
-    this.addPostForm.categoryId().value.set(this.selectedCategory()?.id ?? null);
+    this.addPostForm.categoryId().value.set(this.selectedCategory()!.id);
     if (this.addPostForm().invalid()) {
       console.log(this.addPostForm().value())
       return;
@@ -103,14 +110,14 @@ export class Home implements OnInit {
 
   protected createPost(): void {
 
-    const dataToSend = {
+    const dataToSend: ICreatePost = {
       ...this.addPostForm().value(),
-      categoryId: this.selectedCategory()?.id,
+      categoryId: this.selectedCategory()!.id,
       featured: this.isFeatured(),
       status: this.selectedStatus()
     };
 
-    this.homeService.createPost(dataToSend).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.postsService.createPost(dataToSend).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.isShownStatusPopup.set(false);
         this.isShownAddPostPopup.set(false);
@@ -118,11 +125,12 @@ export class Home implements OnInit {
         this.addPostModel.set({
           title: '',
           caption: '',
+          description: '',
           categoryId: null,
           content: '',
+          coverImgUrl: '',
+          featured: null,
           status: null,
-          featured: false,
-          coverImageurl: ''
         })
         this.addPostForm().reset();
       }, error: error => {
@@ -132,54 +140,14 @@ export class Home implements OnInit {
   }
 }
 
-export interface ICategory {
-  id: number;
-  name: string;
-  slug: string;
-}
 
-export interface IAuthor {
-  id: number;
-  username: string;
-  displayName: string;
-  avatarUrl: string;
-  bio: string;
-}
-
-export type Status = 'DRAFT' | 'PRIVATE' | 'PUBLISHED' | 'ARCHIVED';
-
-export interface IPostSummery {
-  id: number;
-  title: string;
-  slug: string;
-  caption: string;
-  coverImgUrl: string;
-  featured: boolean;
-  status: Status;
-  publishedAt: string;
-  category: ICategory;
-  author: IAuthor;
-}
-
-export interface IPostContent {
-  page: number;
-  size: number;
-  totalElements: number;
-  content: IPostSummery[];
-}
-
-export interface ICategory {
-  id: number;
-  name: string;
-  slug: string;
-}
-
-export interface ICreatePost {
-  "title": string,
-  "caption": string,
-  "content": string,
-  "coverImageurl": string,
-  "featured": boolean,
-  "categoryId": number | null,
-  "status": Status | null,
+export interface PostModel{
+  title: string,
+  caption: string,
+  description: string,
+  categoryId: number | null,
+  content: string,
+  coverImgUrl: string,
+  featured: boolean | null,
+  status: StatusType | null,
 }
