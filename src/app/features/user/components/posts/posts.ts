@@ -1,6 +1,6 @@
 import {Component, input} from '@angular/core';
 import {Post,} from './post/post';
-import {IPostSummery} from '../../pages/home/home';
+import {IPostSumDTO} from '../../services/posts-service';
 
 @Component({
   selector: 'app-posts',
@@ -12,6 +12,6 @@ import {IPostSummery} from '../../pages/home/home';
 })
 export class Posts {
 
-  public posts = input.required<IPostSummery[]>();
+  public posts = input.required<IPostSumDTO[]>();
 }
 

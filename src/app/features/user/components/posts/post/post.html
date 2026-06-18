@@ -1,5 +1,5 @@
 <div class="post cursor-pointer h-122 border border-secondary-100 dark:border-[#242535] rounded-[12px] p-4 flex flex-col gap-4">
-  <div class="img w-full h-60  rounded-[12px]" [ngClass]="`bg-[url(${post().coverImgUrl})]`" ></div>
+  <div class="img w-full h-60 bg-center bg-cover  rounded-[12px]" [style.backgroundImage]="'url(' + post().coverImgUrl + ')'" ></div>
 
   <div class="content max-h-50 h-full w-full flex flex-col gap-4">
     <div class="tag px-2.5 py-1 text-primary-100 bg-secondary dark:bg-[rgba(27,30,52,05)] w-fit rounded-[12px]">{{post().category.name}}</div>
