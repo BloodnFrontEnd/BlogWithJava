@@ -1,0 +1,52 @@
+<div class="registration flex items-center justify-center h-screen bg-secondary-100 dark:bg-transparent">
+  <form class="dark:text-white w-100 h-auto px-9 py-8  dark:bg-secondary-700 flex flex-col gap-4 rounded-[12px]">
+    <h3 class="text-2xl dark:white uppercase text-center">Registration:</h3>
+    <label>
+      Email:
+      <input type="email" placeholder="email" [formField]="registrationForm.email" />
+      @if (registrationForm.email().touched() && registrationForm.email().dirty()) {
+        <ul>
+          @for (error of registrationForm.email().errors(); track error) {
+            <li>{{ error.message }}</li>
+          }
+        </ul>
+      }
+    </label>
+    <label>
+      username:
+      <input type="text" placeholder="username" [formField]="registrationForm.username" />
+      @if (registrationForm.username().touched() && registrationForm.username().dirty()) {
+        <ul>
+          @for (error of registrationForm.username().errors(); track error) {
+            <li>{{ error.message }}</li>
+          }
+        </ul>
+      }
+    </label>
+    <label>
+      displayName:
+      <input type="text" placeholder="displayName" [formField]="registrationForm.displayName" />
+      @if (registrationForm.displayName().touched() && registrationForm.displayName().dirty()) {
+        <ul>
+          @for (error of registrationForm.displayName().errors(); track error) {
+            <li>{{ error.message }}</li>
+          }
+        </ul>
+      }
+    </label>
+    <label>
+      password:
+      <input type="text" placeholder="password" [formField]="registrationForm.password" />
+      @if (registrationForm.password().touched() && registrationForm.password().dirty()) {
+        <ul>
+          @for (error of registrationForm.password().errors(); track error) {
+            <li>{{ error.message }}</li>
+          }
+        </ul>
+      }
+    </label>
+
+    <button class="w-full h-10 rounded-[12px] bg-primary-100" (click)="createUser()" [disabled]="registrationForm().invalid()">Register</button>
+  </form>
+
+</div>

@@ -1,0 +1,82 @@
+<div class="home">
+  <div class="container">
+    <div class="home-inner w-full">
+      <div class="banner w-full h-[600px] rounded-[12px] relative">
+        <div class="banner-img w-full h-[600px] bg-[url('/images/home-cover.jpg')] bg-cover bg-center rounded-[12px]"></div>
+
+        <div
+          class="content max-w-[600px] min-h-[300px] rounded-[12px] bg-white dark:bg-[#181A2A] absolute bottom-[-64px] left-16 max-md:left-0 border border-[2px] border-[#242535] flex flex-col gap-4 p-10">
+          <p class="category px-2.5 py-1 bg-primary-100 w-fit rounded-[12px] dark:text-white text-secondary-800">
+            Something
+          </p>
+
+          <h1 class="text-[28px] dark:text-white">
+            The Impact of Technology on the Workplace: How Technology is Changing
+          </h1>
+
+          <div class="profile mt-auto h-9 w-auto  flex items-center gap-4">
+            <img src="" alt="" class="w-9 h-9 rounded-full ">
+            <p class="text-secondary-400 font-semibold">Jason Francisco</p>
+            <span class="text-secondary-400 ml-2">August 20, 2022</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="posts mt-40 max-xl:px-7">
+        <div class="add-post mx-auto w-186 h-25 rounded-[12px] dark:bg-[#242535] dark:text-secondary-500 flex flex-col gap-1 items-center justify-center cursor-pointer" (click)="showAddPostPopup()">
+          <p class="text-2xl">Advertisement</p>
+          <p class="text-4xl">Add your post!</p>
+        </div>
+        <h2 class="text-3xl dark:text-white mt-20">Posts:</h2>
+
+        <app-posts [posts]="posts()" />
+      </div>
+
+      <button
+        class="w-36 h-12 mx-auto block mt-8 border border-[rgba(105,106,117,0.3)] rounded-[8px] text-secondary-500"
+        routerLink="/posts"
+      >
+        View All Post
+      </button>
+    </div>
+  </div>
+</div>
+
+@if(isShownAddPostPopup()){
+  <app-popup [title]="'Add post'" (close)="isShownAddPostPopup.set(false)" >
+      <form class="!min-w-100 !w-full mt-10 flex flex-col gap-4">
+        <custom-input [label]="'title'" [field]="addPostForm.title" />
+        <custom-input [label]="'caption'" [field]="addPostForm.caption"/>
+        <custom-input [label]="'cover image url'" [field]="addPostForm.coverImageurl" />
+        <custom-input [label]="'content'" [field]="addPostForm.content" />
+        <span>Category:</span>
+        <custom-dropdown [dropdownItems]="categoryDropdownData()" (selectedValues)="selectedCategory.set($event)"/>
+        <div class="som">
+          <p>Featured?</p>
+          <div class="btns flex items-center mt-2">
+            <button class="px-4 py-1 " type="button" [ngClass]="{'bg-primary-100 text-white': isFeatured()}" (click)="isFeatured.set(true)">Yes</button>
+            <button class="px-4 py-1 " type="button" [ngClass]="{'bg-primary-100 text-white': !isFeatured()}" (click)="isFeatured.set(false)">No</button>
+          </div>
+        </div>
+        <button class="px-4 py-1 w-fit mx-auto bg-primary-100 text-white" (click)="showStatusPopup()">Publish</button>
+      </form>
+  </app-popup>
+}
+
+@if(isShownStatusPopup()){
+
+  <app-popup [title]="'Select post status:'" (close)="isShownStatusPopup.set(false)">
+    <div class="btns my-4">
+      <button class="px-4 py-1" [ngClass]="{'bg-primary-100 text-white': selectedStatus() === 'DRAFT'}" (click)="selectedStatus.set('DRAFT')">DRAFT</button>
+      <button class="px-4 py-1" [ngClass]="{'bg-primary-100 text-white': selectedStatus() === 'PRIVATE'}" (click)="selectedStatus.set('PRIVATE')">PRIVATE</button>
+      <button class="px-4 py-1" [ngClass]="{'bg-primary-100 text-white': selectedStatus() === 'PUBLISHED'}" (click)="selectedStatus.set('PUBLISHED')">PUBLISHED</button>
+    </div>
+
+    <button class="px-4 py-1 border w-fit border-primary-100 hover:bg-primary-100 hover:text-white mx-auto" (click)="createPost()">Save</button>
+  </app-popup>
+
+}
+
+@if(isShownAuthPopup()){
+  <app-auth-popup (close)="isShownAuthPopup.set(false)" />
+}

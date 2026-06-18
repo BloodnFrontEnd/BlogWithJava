@@ -1,0 +1,20 @@
+<div class="dropdown w-full h-auto rounded-[12px] flex flex-col">
+  <div class="value w-full h-10 outline-0 flex items-center pl-4 border border-secondary-500 rounded-[12px] cursor-pointer" [ngClass]="{'rounded-bl-none rounded-br-none': isShownData()}" (click)="showData()">
+    {{selectedValue()?.value}}
+  </div>
+  @if(isShownData()){
+    <div class="inner-data">
+      @if(dropdownItems().length){
+        @for (data of dropdownItems(); track data.id) {
+          <div class="som w-full h-10 bg-white flex items-center pl-4 cursor-pointer border border-secondary-500 border-t-0" [ngClass]="{'rounded-bl-[12px] rounded-br-[12px]': $last}" (click)="selectValue(data)" >
+            {{data.value}}
+          </div>
+        }
+      }@else{
+        <div class="som w-full h-10 bg-white flex items-center pl-4 cursor-pointer border border-secondary-500 border-t-0 rounded-bl-[12px] rounded-br-[12px]"  (click)="showData()" >
+          Data not found
+        </div>
+      }
+    </div>
+  }
+</div>

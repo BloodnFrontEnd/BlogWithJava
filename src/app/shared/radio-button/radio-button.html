@@ -1,0 +1,12 @@
+<div
+  class="w-12 h-7 rounded-full flex items-center  relative cursor-pointer p-0.5 transition-colors duration-300"
+  [ngClass]="theme() === 'dark' ? 'bg-secondary-dark' : 'bg-secondary'"
+  (click)="toggleTheme()"
+>
+  <div
+    class="w-6 h-6 rounded-full bg-white transition-transform duration-300 flex items-center justify-center"
+    [ngClass]="theme() === 'dark' ? 'translate-x-5' : 'translate-x-0'"
+  >
+    <svg [lucideIcon]="icon()" size="18"></svg>
+  </div>
+</div>

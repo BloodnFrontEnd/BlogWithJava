@@ -1,0 +1,14 @@
+<div class="posts">
+  <div class="container">
+    <div class="posts-inner w-full h-full max-xl:px-7 relative">
+      <div class="categories categories-scroll flex items-center gap-4 dark:text-white w-full h-14 dark:bg-[#181A2A] bg-white fixed top-25 overflow-x-auto pr-10 max-w-[1200px]">
+        @for (category of categories; track $index) {
+          <p class="px-2.5 py-1 bg dark:bg-[rgba(27,30,52,05)] bg-secondary-100 rounded-[12px] cursor-pointer"
+             [ngClass]="{'!bg-secondary-dark text-white': selectedCategory() === category}"
+              (click)="changeCategory(category)"
+          >{{ category }}</p>
+        }
+      </div>
+    </div>
+  </div>
+</div>

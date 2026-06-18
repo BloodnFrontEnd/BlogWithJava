@@ -1,0 +1,13 @@
+<div class="input flex flex-col gap-1 h-fit">
+  <div class="input-section flex relative w-240">
+    <input type="text" placeholder=" " [formField]="field()" />
+    <label>{{label()}}</label>
+  </div>
+  <div class="errors h-7">
+    @if(errors()?.length){
+      @for (error of errors(); track error.kind) {
+        <span class="pl-1 text-red-700">{{error.message}}</span>
+      }
+    }
+  </div>
+</div>

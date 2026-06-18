@@ -1,0 +1,12 @@
+
+@if (growlService.growl(); as growl) {
+  <div
+    class="growl"
+    [class.success]="growl.type === 'success'"
+    [class.error]="growl.type === 'error'"
+    [class.info]="growl.type === 'info'"
+  >
+    <p class="text-2xl">{{growl.type}}</p>
+    {{ growl.message }}
+  </div>
+}

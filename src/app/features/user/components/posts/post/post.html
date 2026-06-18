@@ -1,0 +1,15 @@
+<div class="post cursor-pointer h-122 border border-secondary-100 dark:border-[#242535] rounded-[12px] p-4 flex flex-col gap-4">
+  <div class="img w-full h-60  rounded-[12px]" [ngClass]="`bg-[url(${post().coverImgUrl})]`" ></div>
+
+  <div class="content max-h-50 h-full w-full flex flex-col gap-4">
+    <div class="tag px-2.5 py-1 text-primary-100 bg-secondary dark:bg-[rgba(27,30,52,05)] w-fit rounded-[12px]">{{post().category.name}}</div>
+
+    <h4 class="text-2xl text-secondary-800 dark:text-white font-semibold pr-2">{{post().title}}</h4>
+
+    <div class="profile !mt-auto h-9 w-auto  flex items-center gap-4">
+      <img src="" alt="" class="w-9 h-9 rounded-full ">
+      <p class="text-secondary-400 font-semibold">{{post().author.displayName}}</p>
+      <span class="text-secondary-400 ml-2">{{ post().publishedAt }}</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<app-popup [title]="type()" (close)="close.emit()">
+  <div class="form flex flex-col w-100 gap-4 mt-8">
+    @if (type() === 'sign in') {
+      <custom-input label="Emial" [field]="loginForm.email" [errors]="getFieldErrors(loginForm.email)" />
+      <custom-input label="Password" [field]="loginForm.password" [errors]="getFieldErrors(loginForm.password)" />
+    }
+    @else{
+      <custom-input label="Email" [field]="registrationForm.email" [errors]="getFieldErrors(registrationForm.email)" />
+      <custom-input label="username" [field]="registrationForm.username" [errors]="getFieldErrors(registrationForm.username)" />
+      <custom-input label="displayName" [field]="registrationForm.displayName" [errors]="getFieldErrors(registrationForm.displayName)" />
+      <custom-input label="Password" [field]="registrationForm.password" [errors]="getFieldErrors(registrationForm.password)" />
+      <custom-input label="Password rep" [field]="registrationForm.passwordRep" [errors]="getFieldErrors(registrationForm.passwordRep)" />
+    }
+    <div class="action flex items-center justify-between">
+      <button class="px-2 py-1 bg-primary-100 text-white rounded-[4px] w-fit" (click)="onSubmit()">{{ type() }}</button>
+      <p (click)="changeType()">{{ type() === 'sign in' ? 'sign up' : 'sign in'}}</p>
+    </div>
+  </div>
+
+</app-popup>

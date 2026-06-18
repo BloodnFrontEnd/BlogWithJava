@@ -1,0 +1,61 @@
+<header class="h-[100px] w-full fixed left-0 top-0 z-10 dark:bg-[#181A2A] bg-white">
+  <div class="container">
+    <div class="header-inner h-[100px] flex items-center justify-between max-lg:px-10">
+      <div class="logo">
+        <h1 class="text-red-700 dark:text-blue-700">Logo</h1>
+        @if(isLogined()){
+          <button (click)="logOut()">log out</button>
+        }
+      </div>
+
+      <div class="navigation max-lg:hidden">
+        <nav>
+          <ul class="flex items-center gap-10 dark:text-white text-[16px]">
+            <li>Home</li>
+            <li>Blog</li>
+            <li>Single Post</li>
+            <li>Pages</li>
+            <li>Contact</li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="search flex items-center gap-10 max-lg:hidden">
+        <input type="text" placeholder="search..."
+               class="w-[166px] h-[36px] rounded-[10px] bg-secondary  text-secondary-600 dark:bg-[#242535] dark:placeholder:text-[#62636F] pl-4 text-[14px]">
+        <app-radio-button />
+      </div>
+
+      <div class="burger w-12 h-12 bg-secondary-400 rounded-full lg:hidden flex flex-col gap-1.5 items-center justify-center" (click)="showMobileMenu()">
+        <div class="line w-9 h-1 bg-white"></div>
+        <div class="line w-9 h-1 bg-white"></div>
+        <div class="line w-9 h-1 bg-white"></div>
+      </div>
+    </div>
+  </div>
+
+  @if(isMobileShown()){
+  <div class="mobile w-full h-screen bg-red-700 z-20 absolute left-0 top-0 flex flex-col gap-8 items-center pt-10 @container px-10">
+
+    <h1 class="text-3xl py-5" (click)="showMobileMenu()">Close</h1>
+    <div class="search flex items-center gap-10 w-full ">
+      <input type="text" placeholder="search..."
+             class="w-full h-12 rounded-[10px]  bg-secondary  text-secondary-600 dark:bg-[#242535] dark:placeholder:text-[#62636F] pl-4 text-[14px]">
+    </div>
+
+    <div class="navigation">
+      <nav>
+        <ul class="flex flex-col gap-10 dark:text-white text-2xl">
+          <li>Home</li>
+          <li>Blog</li>
+          <li>Single Post</li>
+          <li>Pages</li>
+          <li>Contact</li>
+        </ul>
+      </nav>
+    </div>
+
+      <app-radio-button />
+  </div>
+  }
+</header>

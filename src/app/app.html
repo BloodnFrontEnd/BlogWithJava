@@ -1,0 +1,8 @@
+@if(layoutService.showLayout()){
+  <app-header />
+}
+<div [ngClass]="{'mt-31': layoutService.showLayout()}" >
+  <router-outlet />
+</div>
+
+<app-growl />

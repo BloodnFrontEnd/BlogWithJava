@@ -1,0 +1,5 @@
+<div class="posts grid grid-cols-3 items-center justify-between gap-y-5 mt-4 max-xl:grid-cols-2 max-md:!grid-cols-1 max-xl:gap-4">
+  @for (post of posts(); track post.id) {
+    <app-post class="max-xl:w-full w-96" [post]="post" />
+  }
+</div>

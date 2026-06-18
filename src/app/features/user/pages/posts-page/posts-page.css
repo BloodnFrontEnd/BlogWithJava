@@ -1,0 +1,22 @@
+.categories-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #696a75 transparent;
+}
+
+/* Chrome, Edge, Safari */
+.categories-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.categories-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.categories-scroll::-webkit-scrollbar-thumb {
+  background: #696a75;
+  border-radius: 999px;
+}
+
+.categories-scroll::-webkit-scrollbar-thumb:hover {
+  background: #4b4c57;
+}
