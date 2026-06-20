@@ -11,18 +11,20 @@
       <div class="navigation max-lg:hidden">
         <nav>
           <ul class="flex items-center gap-10 dark:text-white text-[16px]">
-            <li>Home</li>
-            <li>Blog</li>
-            <li>Single Post</li>
-            <li>Pages</li>
-            <li>Contact</li>
+            <li [routerLink]="'/'">Home</li>
+            <li [routerLink]="'/posts'">Posts</li>
           </ul>
         </nav>
       </div>
 
-      <div class="search flex items-center gap-10 max-lg:hidden">
+      <div class="search flex items-center max-lg:hidden" [ngClass]="isLogined() ? 'gap-4' : 'gap-10'">
         <input type="text" placeholder="search..."
                class="w-[166px] h-[36px] rounded-[10px] bg-secondary  text-secondary-600 dark:bg-[#242535] dark:placeholder:text-[#62636F] pl-4 text-[14px]">
+        @if(isLogined()){
+          <div class="profile w-10 h-10 rounded-full bg-primary-100 cursor-pointer flex items-center justify-center">
+            <svg [lucideIcon]='userIcon()' size="30" color="white"></svg>
+          </div>
+        }
         <app-radio-button />
       </div>
 

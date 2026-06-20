@@ -1,17 +1,24 @@
 import {Component, HostListener, inject, OnInit, signal} from '@angular/core';
 import {RadioButton} from '../../../../shared/radio-button/radio-button';
 import {AuthService} from '../../../auth/auth-service';
+import { CommonModule } from '@angular/common';
+import { LucideUser, LucideDynamicIcon } from '@lucide/angular';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-header',
   imports: [
-    RadioButton
-  ],
+    RadioButton,
+    CommonModule,
+    LucideDynamicIcon,
+    RouterLink
+],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
 export class Header implements OnInit {
   private readonly authService = inject(AuthService);
+  protected readonly userIcon = signal(LucideUser)
 
   protected isMobileShown = signal<boolean>(false);
   protected isLogined = signal<boolean>(false);
@@ -28,7 +35,7 @@ export class Header implements OnInit {
   }
 
   protected logOut(): void {
-    const refreshToken = localStorage.getItem('refreshToken');
+    const refreshToken = sessionStorage.getItem('refreshToken');
     if (refreshToken) {
       this.authService.logOut(refreshToken).pipe().subscribe(() => {
         sessionStorage.removeItem('accessToken');
@@ -36,6 +43,7 @@ export class Header implements OnInit {
         sessionStorage.removeItem('username');
         sessionStorage.removeItem('displayName');
         sessionStorage.removeItem('role');
+        this.isLogined.set(false);
       });
     }
   }

@@ -1,19 +1,82 @@
-import {Component, signal} from '@angular/core';
+import {Component, DestroyRef, inject, OnInit, signal} from '@angular/core';
 import {NgClass} from '@angular/common';
+import {CategoryService, ICategory} from '../../services/category-service';
+import {IPostDTO, IPostSumDTO, PostsService} from '../../services/posts-service';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {Posts} from '../../components/posts/posts';
+import {Router} from '@angular/router';
+import {LoaderService} from '../../../../core/loader/loader-service';
+import {finalize, forkJoin} from 'rxjs';
 
 @Component({
   selector: 'app-posts-page',
   imports: [
-    NgClass
+    NgClass,
+    Posts
   ],
   templateUrl: './posts-page.html',
   styleUrl: './posts-page.css',
 })
-export class PostsPage {
-  protected readonly categories = ["all", "Technology", "Travel", "Business", "Design", "Health", "Food", "Coding", "Lifestyle", "Finance", "Host"]
-  protected selectedCategory = signal<string>("all");
+export class PostsPage implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly loaderService = inject(LoaderService);
 
-  protected changeCategory(category: string): void {
+  private readonly categoriesService = inject(CategoryService);
+  private readonly postsService = inject(PostsService);
+  private readonly router = inject(Router);
+
+  protected categories = signal<ICategory[]>([{id: -1, name: 'all', slug: 'all'}]);
+  protected selectedCategory = signal<ICategory | null>({id: -1, name: 'all', slug: 'all'});
+  protected posts = signal<IPostSumDTO[]>([]);
+
+  ngOnInit(): void {
+    this.loaderService.setLoading(true);
+    forkJoin({
+      categories: this.categoriesService.getCategories(),
+      posts: this.postsService.getPosts()
+    }).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.loaderService.setLoading(false))).subscribe({
+      next: ({
+               categories,
+               posts
+             }) => {
+        this.categories.update((val) => [...(val ?? []), ...categories]);
+        this.posts.set(posts.content)
+      }
+    })
+
+  }
+
+  protected getPosts(): void {
+    this.loaderService.setLoading(true);
+    this.postsService.getPosts().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (res) => {
+        this.posts.set(res.content);
+        this.loaderService.setLoading(false);
+      }
+    })
+  }
+
+
+  protected changeCategory(category: ICategory): void {
+    if (this.selectedCategory()?.id === category.id) {
+      return;
+    }
+    if (category.id === -1) {
+      this.selectedCategory.set(category);
+      this.getPosts();
+      return;
+    }
+    this.loaderService.setLoading(true);
     this.selectedCategory.set(category);
+    this.postsService.getPostsByCategorySlug(category.slug).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (res) => {
+        this.posts.set(res.content);
+        this.loaderService.setLoading(false);
+      }
+    })
+  }
+
+  protected navigateToPost(post: IPostSumDTO) {
+    this.router.navigate([`/posts/${post.slug}`]);
   }
 }

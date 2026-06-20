@@ -14,6 +14,14 @@ export class PostsService {
     return this.http.get<IPostDTO>(this.API, {params: {...params}});
   }
 
+  public getPostsByCategorySlug(slug: string): Observable<IPostDTO>{
+    return this.http.get<IPostDTO>(`${this.API}/category/${slug}`);
+  }
+
+  public getPostBySlug(slug: string): Observable<IPostDetailDTO>{
+    return this.http.get<IPostDetailDTO>(`${this.API}/${slug}`);
+  }
+
   public createPost(data: ICreatePost): Observable<any> {
     return this.http.post(this.API, data);
   }
@@ -66,4 +74,20 @@ export interface ICreatePost {
   "featured": boolean,
   "categoryId": number,
   "status": StatusType,
+}
+
+export interface IPostDetailDTO {
+  id: number;
+  title: string;
+  slug: string;
+  caption: string;
+  content: string;
+  coverImgUrl: string;
+  featured: boolean;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  status: StatusType,
+  author: IAuthor,
+  category: ICategory,
 }

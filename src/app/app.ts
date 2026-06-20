@@ -7,10 +7,11 @@ import {NgClass} from '@angular/common';
 import {AuthService} from './features/auth/auth-service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {setToken} from './core/token-object/token-object';
+import {Loader} from './core/loader/loader';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header, Growl, NgClass],
+  imports: [RouterOutlet, Header, Growl, NgClass, Loader],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
