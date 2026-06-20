@@ -1,4 +1,4 @@
-import {inject, Injectable} from '@angular/core';
+import {inject, Injectable, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
@@ -8,6 +8,15 @@ import {Observable} from 'rxjs';
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly API = 'https://cms-blog-backend-ci8n.onrender.com/api/auth'
+  public isAuthorized = signal<boolean>(false);
+  public username = signal<string | null>(null)
+
+  constructor() {
+    if(sessionStorage.getItem('accessToken')){
+      this.setIsAuthorized(true);
+      this.username.set(sessionStorage.getItem('username') ?? null);
+    }
+  }
 
   public createUser(data: IRegister): Observable<any> {
     return this.http.post(`${this.API}/register`, data);
@@ -23,6 +32,10 @@ export class AuthService {
 
   public logOut(token: string): Observable<any> {
     return this.http.post(`${this.API}/logout`, {'refreshToken': token});
+  }
+
+  public setIsAuthorized(value: true | false): void{
+    this.isAuthorized.set(value);
   }
 }
 

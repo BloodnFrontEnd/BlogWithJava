@@ -1,0 +1,31 @@
+<div class="profile">
+  <div class="container">
+    <div class="profile-inner">
+      <div class="actions">
+        <button class="px-2 py-1 bg-primary-100 rounded-[4px] text-white"
+                (click)="setContentType('myPosts')">My posts
+        </button>
+      </div>
+
+      @if (contentType() === 'myPosts') {
+        <div class="post-types flex items-center gap-4 mt-4">
+          @for (status of postStatuses; track $index) {
+            <button class="px-2 py-1 rounded-[4px] bg-secondary-500"
+                    [ngClass]="{'!bg-primary-100 !text-white': selectedPostStatus() === status}"
+                    (click)="setPostStatus(status)"
+            >{{ status }}
+            </button>
+          }
+        </div>
+
+        <div class="posts">
+          @if(posts().length){
+            <app-posts [posts]="posts()"/>
+          }@else{
+            <h2 class="text-center text-3xl dark:text-white mt-8">No posts yet...</h2>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>
