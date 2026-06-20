@@ -9,6 +9,7 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {setToken} from '../../core/token-object/token-object';
 import {GrowlService} from '../../core/growl/growl-service';
 import {ObjectHelper} from '../../core/models/Object-Helper';
+import {LoaderService} from '../../core/loader/loader-service';
 
 @Component({
   selector: 'app-auth-popup',
@@ -20,9 +21,10 @@ import {ObjectHelper} from '../../core/models/Object-Helper';
   styleUrl: './auth-popup.css',
 })
 export class AuthPopup {
+  private readonly destroyRef = inject(DestroyRef);
   private readonly authService = inject(AuthService);
   private readonly growl = inject(GrowlService)
-  private readonly destroyRef = inject(DestroyRef);
+  private readonly loaderService = inject(LoaderService);
 
   protected type = signal<'sign in' | 'sign up'>('sign in');
   public close = output();
@@ -93,6 +95,8 @@ export class AuthPopup {
         return;
       }
 
+      this.loaderService.setLoading(true);
+
       const dataToSend = {...this.loginForm().value()};
 
       this.authService.login(dataToSend).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
@@ -104,6 +108,9 @@ export class AuthPopup {
             email: '',
             password: ''
           })
+          this.authService.setIsAuthorized(true);
+          this.close.emit()
+          this.loaderService.setLoading(false);
         }, error: (error) => {
           console.log(error);
           this.growl.error(error.error.message);
@@ -114,7 +121,7 @@ export class AuthPopup {
       if(!this.registrationForm().valid()) {
         return;
       }
-
+      this.loaderService.setLoading(true);
       const dataToSend = {...this.registrationForm().value(), passwordRep: null};
       ObjectHelper.clearObject(dataToSend);
 
@@ -130,6 +137,9 @@ export class AuthPopup {
             displayName: '',
             passwordRep: '',
           });
+          this.authService.setIsAuthorized(true);
+          this.close.emit()
+          this.loaderService.setLoading(false);
         }, error: (error) => {
           this.growl.error(error.error.message);
         }

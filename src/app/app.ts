@@ -30,6 +30,6 @@ export class App implements OnInit {
           }
         })
       }
-    }, 720000)
+    }, 180000)
   }
 }
