@@ -1,10 +1,12 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { NgClass } from '@angular/common';
-import { CategoryService, ICategory } from '../../services/category-service';
-import { IPostDTO, IPostSumDTO, PostsService } from '../../services/posts-service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Posts } from '../../components/posts/posts';
-import { Router } from '@angular/router';
+import {Component, DestroyRef, inject, OnInit, signal} from '@angular/core';
+import {NgClass} from '@angular/common';
+import {CategoryService, ICategory} from '../../services/category-service';
+import {IPostDTO, IPostSumDTO, PostsService} from '../../services/posts-service';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {Posts} from '../../components/posts/posts';
+import {Router} from '@angular/router';
+import {LoaderService} from '../../../../core/loader/loader-service';
+import {finalize, forkJoin} from 'rxjs';
 
 @Component({
   selector: 'app-posts-page',
@@ -17,29 +19,39 @@ import { Router } from '@angular/router';
 })
 export class PostsPage implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
+  private readonly loaderService = inject(LoaderService);
 
   private readonly categoriesService = inject(CategoryService);
   private readonly postsService = inject(PostsService);
   private readonly router = inject(Router);
 
-  protected categories = signal<ICategory[]>([{ id: -1, name: 'all', slug: 'all' }]);
-  protected selectedCategory = signal<ICategory | null>({ id: -1, name: 'all', slug: 'all' });
+  protected categories = signal<ICategory[]>([{id: -1, name: 'all', slug: 'all'}]);
+  protected selectedCategory = signal<ICategory | null>({id: -1, name: 'all', slug: 'all'});
   protected posts = signal<IPostSumDTO[]>([]);
 
   ngOnInit(): void {
-    this.categoriesService.getCategories().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (res) => {
-        this.categories.update((val) => [...(val ?? []), ...res]);
+    this.loaderService.setLoading(true);
+    forkJoin({
+      categories: this.categoriesService.getCategories(),
+      posts: this.postsService.getPosts()
+    }).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.loaderService.setLoading(false))).subscribe({
+      next: ({
+               categories,
+               posts
+             }) => {
+        this.categories.update((val) => [...(val ?? []), ...categories]);
+        this.posts.set(posts.content)
       }
     })
 
-    this.getPosts();
   }
 
   protected getPosts(): void {
+    this.loaderService.setLoading(true);
     this.postsService.getPosts().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         this.posts.set(res.content);
+        this.loaderService.setLoading(false);
       }
     })
   }
@@ -54,15 +66,17 @@ export class PostsPage implements OnInit {
       this.getPosts();
       return;
     }
+    this.loaderService.setLoading(true);
     this.selectedCategory.set(category);
     this.postsService.getPostsByCategorySlug(category.slug).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         this.posts.set(res.content);
+        this.loaderService.setLoading(false);
       }
     })
   }
 
-  protected navigateToPost(post: IPostSumDTO){
+  protected navigateToPost(post: IPostSumDTO) {
     this.router.navigate([`/posts/${post.slug}`]);
   }
 }

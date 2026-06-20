@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import 'tailwindcss';
+@import 'quill/dist/quill.snow.css';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -16,6 +17,10 @@
   --color-secondary-800: #181A2A;
   --color-secondary-dark: #4B6BFB;
 
+  /*Single Post*/
+  --color-secondary-post-800: #181A2A;
+  --color-secondary-post-600: #3B3C4A;
+
   /* --  BREAKPOINTS   --  */
   --breakpoint-sm: 376px;
   --breakpoint-md: 768px;
@@ -24,6 +29,8 @@
 
 .dark{
   --color-app-bg: #181A2A;
+  --color-secondary-post-800: #fff;
+  --color-secondary-post-600: #BABABF;
 }
 
 .container{
@@ -34,4 +41,20 @@
 
 button{
   cursor: pointer;
+}
+
+@media screen and (max-width: 767px){
+  .container{
+    padding-inline: 14px;
+  }
+}
+
+.single-post__post-content h1{
+  font-size: 28px;
+  color: var(--color-secondary-post-800);
+}
+
+.single-post__post-content p{
+  font-size: 18px;
+  color: var(--color-secondary-post-600);
 }

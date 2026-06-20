@@ -11,6 +11,9 @@ import {CommonModule} from '@angular/common';
 import {AuthPopup} from '../../../../shared/auth-popup/auth-popup';
 import {ICreatePost, IPostDTO, PostsService, StatusType} from '../../services/posts-service';
 import {CategoryService, ICategory} from '../../services/category-service';
+import {ContentChange, QuillEditorComponent} from 'ngx-quill';
+import {exhaustAll, Subject} from 'rxjs';
+import {LoaderService} from '../../../../core/loader/loader-service';
 
 @Component({
   selector: 'app-home',
@@ -22,6 +25,7 @@ import {CategoryService, ICategory} from '../../services/category-service';
     CustomDropdown,
     CommonModule,
     AuthPopup,
+    QuillEditorComponent,
   ],
   templateUrl: './home.html',
   styleUrl: './home.css',
@@ -29,6 +33,7 @@ import {CategoryService, ICategory} from '../../services/category-service';
 export class Home implements OnInit {
   private readonly postsService = inject(PostsService);
   private readonly categoryService = inject(CategoryService);
+  private readonly loaderService = inject(LoaderService);
 
   protected readonly posts = signal<any>([]);
 
@@ -70,12 +75,35 @@ export class Home implements OnInit {
 
   ngOnInit() {
     this.getPosts();
+
+  }
+
+  protected editorModules = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+
+      [{ header: [1, 2, 3, false] }],
+
+      [{ list: 'ordered' }, { list: 'bullet' }],
+
+      [{ align: [] }],
+
+      ['link', 'image'],
+
+      ['clean'],
+    ],
+  };
+
+  public onContentChanged(event: ContentChange): void{
+    this.addPostForm.content().value.set(event.html ?? '');
   }
 
   // DONE
   private getPosts(): void {
+    this.loaderService.setLoading(true);
     this.postsService.getPosts({page: 0, size: 10}).pipe(takeUntilDestroyed(this.destroyRef)).subscribe((posts: IPostDTO) => {
       this.posts.set(posts.content);
+      this.loaderService.setLoading(false);
     })
   }
 
@@ -117,27 +145,9 @@ export class Home implements OnInit {
       status: this.selectedStatus()
     };
 
-    this.postsService.createPost(dataToSend).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: () => {
-        this.isShownStatusPopup.set(false);
-        this.isShownAddPostPopup.set(false);
-        this.getPosts();
-        this.addPostModel.set({
-          title: '',
-          caption: '',
-          description: '',
-          categoryId: null,
-          content: '',
-          coverImgUrl: '',
-          featured: null,
-          status: null,
-        })
-        this.addPostForm().reset();
-      }, error: error => {
-        console.log(error);
-      }
-    })
   }
+
+
 }
 
 

@@ -48,7 +48,7 @@
         <custom-input [label]="'title'" [field]="addPostForm.title" />
         <custom-input [label]="'caption'" [field]="addPostForm.caption"/>
         <custom-input [label]="'cover image url'" [field]="addPostForm.coverImgUrl" />
-        <custom-input [label]="'content'" [field]="addPostForm.content" />
+        <quill-editor [modules]="editorModules" (onContentChanged)="onContentChanged($event)"/>
         <span>Category:</span>
         <custom-dropdown [dropdownItems]="categoryDropdownData()" (selectedValues)="selectedCategory.set($event)"/>
         <div class="som">

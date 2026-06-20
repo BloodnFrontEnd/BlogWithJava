@@ -1,1 +1,25 @@
-<p>single-post works!</p>
+<div class="single-post">
+  <div class="container">
+    <div class="single-post__inner max-w-200 mx-auto">
+      <div class="category px-1 py-0.5 bg-primary-100 w-fit rounded-[6px] text-white">{{post()?.category?.name}}</div>
+      <div class="post-title__author flex flex-col mt-4 gap-5">
+        <h1 class="text-4xl dark:text-white text-secondary-800">{{post()?.title}}</h1>
+        <div class="profile h-7 w-fit flex items-center gap-6">
+          <div class="person w-auto h-full flex items-center gap-2">
+            <div class="img h-full w-7 rounded-full bg-secondary-500"></div>
+            <p class="text-secondary-500">{{post()?.author?.displayName}}</p>
+          </div>
+          <p class="text-secondary-500">{{post()?.publishedAt}}</p>
+        </div>
+      </div>
+
+      @if(post()?.coverImgUrl){
+        <div class="img w-full h-115 rounded-[12px] bg-cover bg-center my-8" [style.backgroundImage]="'url(' + post()?.coverImgUrl + ')'"></div>
+      }
+
+      <div class="single-post__post-content" [innerHTML]="post()?.content">
+
+      </div>
+    </div>
+  </div>
+</div>
