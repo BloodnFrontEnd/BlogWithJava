@@ -1,0 +1,17 @@
+<div class="pagination w-full h-10">
+  <div class="container">
+    <div class="pagination-inner w-full h-10 flex items-center justify-center gap-4">
+      <div class="buttons flex items-center gap-4">
+        <button (click)="selectCurrentPage(1)"><<</button>
+        <button (click)="prevPage()"><</button>
+        @for (page of pageCount(); track $index) {
+          <button [ngClass]="{'!bg-primary-100 text-white': page === currentPage()}"
+                  (click)="selectCurrentPage(page)">{{ page }}
+          </button>
+        }
+        <button (click)="nextPage()">></button>
+        <button (click)="selectCurrentPage(this.paginatorData().totalPages)">>></button>
+      </div>
+    </div>
+  </div>
+</div>

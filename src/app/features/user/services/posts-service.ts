@@ -26,8 +26,8 @@ export class PostsService {
     return this.http.post(this.API, data);
   }
 
-  public getPostsByProfileAndStatus(status: StatusType): Observable<IPostDTO>{
-    return this.http.get<IPostDTO>(`${this.API}/my-posts`, {params: {status: status}});
+  public getPostsByProfileAndStatus(params: any): Observable<IPostDTO>{
+    return this.http.get<IPostDTO>(`${this.API}/my-posts`, {params: params});
   }
 
 }

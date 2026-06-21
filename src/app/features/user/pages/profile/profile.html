@@ -21,6 +21,11 @@
         <div class="posts">
           @if(posts().length){
             <app-posts [posts]="posts()"/>
+            @if(paginatorData(); as paginatorData){
+              <div class="mt-10">
+                <app-pagination  [paginatorData]="paginatorData" (selectedPage)="getPosts($event)" />
+              </div>
+            }
           }@else{
             <h2 class="text-center text-3xl dark:text-white mt-8">No posts yet...</h2>
           }

@@ -4,12 +4,15 @@ import {NgClass} from '@angular/common';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {LoaderService} from '../../../../core/loader/loader-service';
 import {Posts} from '../../components/posts/posts';
+import {IPaginator, Pagination} from '../../../../shared/pagination/pagination';
+import {ObjectHelper} from '../../../../core/models/Object-Helper';
 
 @Component({
   selector: 'app-profile',
   imports: [
     NgClass,
-    Posts
+    Posts,
+    Pagination
   ],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
@@ -22,6 +25,7 @@ export class Profile implements OnInit {
   protected contentType = signal<string>('myPosts');
   protected readonly postStatuses: StatusType[] = ["PUBLISHED", "PRIVATE", "DRAFT", "ARCHIVED"]
   protected selectedPostStatus = signal<StatusType>('PUBLISHED')
+  protected paginatorData = signal<IPaginator | null>(null);
 
   protected readonly posts = signal<IPostSumDTO[]>([]);
 
@@ -40,13 +44,22 @@ export class Profile implements OnInit {
     this.getPosts();
   }
 
-  protected getPosts(): void{
+  protected getPosts(page?: number): void{
+    const paginationData = {
+      status: this.selectedPostStatus(),
+      size: 100,
+      page: page ?? null,
+    }
+    ObjectHelper.clearObject(paginationData);
     this.loaderService.setLoading(true);
-    this.postsService.getPostsByProfileAndStatus(this.selectedPostStatus()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.postsService.getPostsByProfileAndStatus(paginationData).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         this.posts.set(res.content);
         this.loaderService.setLoading(false);
+        const paginatorData: IPaginator = {size: res.size, page: res.page, totalPages: res.totalPages, totalElements: res.totalElements};
+        this.paginatorData.set(paginatorData);
       }
     })
   }
+
 }
