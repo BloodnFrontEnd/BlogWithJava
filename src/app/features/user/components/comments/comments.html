@@ -1,0 +1,33 @@
+<div class="comments w-full h-fit">
+    <div class="container">
+        <div class="comments-inner mt-4 flex flex-col gap-4">
+            <div class="add-comment w-full min-h-[150px]">
+                <textarea name="" id="" class="w-full h-fit border border-white min-h-[100px]"></textarea>
+                <button class="float-right px-2 py-1 bg-primary-100 rounded-[12px] text-white">Post</button>
+            </div>
+            @for (item of comments(); track item.id) {
+                <div class="comment w-full py-4 px-2 border border-black dark:border-white rounded-[12px] flex flex-col gap-4 overflow-hidden" [ngClass]="item.isShowMore ? 'h-fit' : 'max-h-[160px]'">
+                <div class="author-actions flex items-center justify-between">
+                    <div class="author flex items-center gap-2 dark:text-white">
+                        <div class="img w-10 h-10 bg-red-700 rounded-full"></div>
+                        <div class="author-data flex flex-col gap-[0.5px]">
+                            <p class="text-[18px]">Display name</p>
+                            <p class="text-[14px]">Comment date</p>
+                        </div>
+                    </div>
+
+                    <!-- Need to add if on actions -->
+                    <div class="actions flex items-center gap-1 dark:text-white">
+                        <p>edit</p>
+                        <p>delete</p>
+                    </div>
+                </div>
+
+                <div class="comment-data dark:text-white">
+                    <p (click)="showMore(item.id)">{{item.comment}}</p>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</div>

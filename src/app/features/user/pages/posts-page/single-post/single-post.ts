@@ -5,12 +5,14 @@ import { map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {ContentChange, QuillEditorComponent} from 'ngx-quill';
 import {LoaderService} from '../../../../../core/loader/loader-service';
+import { Comments } from "../../../components/comments/comments";
 
 @Component({
   selector: 'app-single-post',
   imports: [
-    QuillEditorComponent
-  ],
+    QuillEditorComponent,
+    Comments
+],
   templateUrl: './single-post.html',
   styleUrl: './single-post.css',
 })
